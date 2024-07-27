@@ -1,0 +1,91 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: unset;
+  padding: unset;
+  border: unset;
+  vertical-align: baseline;
+  font: inherit;
+  font-size: 100%;
+  min-width: 0;
+  word-wrap: break-word;
+}
+
+html {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  line-height: 1.5;
+  font-family: var(--font-body);
+}
+
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+:target {
+  scroll-margin-block: 5ex;
+}
+
+h1,
+h2,
+h3,
+h4,
+button,
+select {
+  font: inherit;
+  font-family: var(--font-heading);
+  line-height: 1.1;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='currentColor' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>") !important;
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+}
+
+img,
+picture,
+svg {
+  display: block;
+  min-width: 1.5rem;
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+}
+
+blockquote,
+q {
+  quotes: "." "..";
+}
+
+[hidden] {
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+}

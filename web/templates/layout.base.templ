@@ -1,0 +1,14 @@
+package templates
+
+templ BaseLayout(main templ.Component) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<body>
+			if main != nil {
+				<main>
+					@main
+				</main>
+			}
+		</body>
+	</html>
+}

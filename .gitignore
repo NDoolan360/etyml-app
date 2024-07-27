@@ -1,0 +1,27 @@
+# Logs
+logs
+*.log
+*-debug.log*
+*.timestamp-*
+
+# Editor directories and files
+*.env
+!.example.env
+.DS_Store
+
+# Go files
+go.work
+go.work.sum
+*.test
+*.out
+
+# Ignore templ generated files
+*_templ.go
+*_templ.txt
+
+# Build artifacts
+dist
+make_html
+
+# Local Netlify folder
+.netlify
