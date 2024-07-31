@@ -1,0 +1,30 @@
+[goal] {
+  border-width: 3px !important;
+}
+
+[goal][complete] {
+  border-color: green !important;
+}
+
+form {
+  padding: 20px;
+  width: 50%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#previous {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100px;
+  text-align: left;
+}
+
+#previous>ul {
+  max-height: 100px;
+  overflow-y: scroll;
+}

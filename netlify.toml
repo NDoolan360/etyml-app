@@ -8,6 +8,16 @@ publish = "dist"
 command = "make dist"
 functions = "api"
 
+[[redirects]]
+from = "/health"
+to = "/.netlify/functions/health"
+status = 200
+
+[[redirects]]
+from = "/puzzle"
+to = "/.netlify/functions/puzzle"
+status = 200
+
 [build.environment]
 GO_VERSION = "1.22.5"
 GO_IMPORT_PATH = "github.com/NDoolan360/etyml-app"

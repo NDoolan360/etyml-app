@@ -12,7 +12,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                directory: [web/templates, api/health]
+                directory: [web/templates, api/health, api/puzzle]
         steps:
             - uses: actions/checkout@v4
             - uses: actions/setup-go@v5

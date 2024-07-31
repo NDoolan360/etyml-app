@@ -3,6 +3,7 @@ package templates
 templ BaseLayout(main templ.Component) {
 	<!DOCTYPE html>
 	<html lang="en">
+		@head()
 		<body>
 			if main != nil {
 				<main>
@@ -11,4 +12,14 @@ templ BaseLayout(main templ.Component) {
 			}
 		</body>
 	</html>
+}
+
+templ head() {
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+		<link rel="icon" href="/favicon.ico"/>
+		<link rel="stylesheet" type="text/css" href="/styles.css"/>
+		<script src="/scripts/htmx@2.0.1-min.js"></script>
+	</head>
 }

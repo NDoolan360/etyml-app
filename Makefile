@@ -1,4 +1,4 @@
-MODULES = ./web ./web/templates ./api/health
+MODULES = ./web ./web/templates ./api/health ./api/puzzle
 MAKE_HTML_MODULE = ./web
 MAKE_HTML_BIN = make_html
 STATIC_DIR = web/static
@@ -22,12 +22,13 @@ install: go.work generate
 
 dist: install
 	rm -rf $@; cp -R $(STATIC_DIR)/. $@
+	mkdir $@/scripts
 ifneq (, $(shell which minify))
 	minify -o $@/styles.css -b web/styles/*.css
-	minify -o $@/scripts -a ./web/scripts/*.js
+	minify -o $@/scripts/ -a web/scripts/*.js
 else
 	go run github.com/tdewolff/minify/v2/cmd/minify@latest -o $@/styles.css -b web/styles/*.css
-	go run github.com/tdewolff/minify/v2/cmd/minify@latest -o $@/scripts -a ./web/scripts/*.js
+	go run github.com/tdewolff/minify/v2/cmd/minify@latest -o $@/scripts/ -a web/scripts/*.js
 endif
 	go build -o $(MAKE_HTML_BIN) $(MAKE_HTML_MODULE)
 	cd $@; ../$(MAKE_HTML_BIN);

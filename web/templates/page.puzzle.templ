@@ -1,0 +1,31 @@
+package templates
+
+templ Puzzle(id string, guesses []string, tree templ.Component, isComplete bool) {
+	if isComplete {
+		<a href="/">Done</a>
+	}
+	@tree
+	<form
+		action="/puzzle"
+		method="GET"
+		hx-boost="true"
+		hx-replace-url="true"
+	>
+		<input required autofocus disabled?={ isComplete } name="guess"/>
+		<!-- Hidden Fields -->
+		<input type="hidden" name="id" value={ id }/>
+		for _, guess := range(guesses) {
+			<input type="hidden" name="guess" value={ guess }/>
+		}
+	</form>
+	if len(guesses) > 0 {
+		<div id="previous">
+			<h2>Guesses</h2>
+			<ul>
+				for _, guess := range(guesses) {
+					<li>{ guess }</li>
+				}
+			</ul>
+		</div>
+	}
+}

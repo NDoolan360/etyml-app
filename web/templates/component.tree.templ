@@ -1,0 +1,35 @@
+package templates
+
+templ Tree(node templ.Component) {
+	<div class="tree">
+		<ul>
+			@node
+		</ul>
+	</div>
+}
+
+templ Node(
+	language string,
+	term string,
+	definition string,
+	children []templ.Component,
+	goal bool,
+	complete bool,
+) {
+	<li>
+		<span goal?={ goal } complete?={ complete }>
+			<h1>{ language }</h1>
+			<h2>{ term }</h2>
+			if definition != "" {
+				<p>{ definition }</p>
+			}
+		</span>
+		if children != nil {
+			<ul>
+				for _, child := range children {
+					@child
+				}
+			</ul>
+		}
+	</li>
+}
