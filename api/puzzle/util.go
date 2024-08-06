@@ -84,11 +84,14 @@ func obscureStringAfterNth(s string, n int, obscurer rune) string {
 	count := 0
 	result := ""
 
-	for _, r := range s {
+	for i, r := range s {
 		if count < n {
 			count++
 			result += string(r)
+		} else if i < len(s)-1 && s[i+1] == '(' && s[len(s)-1] == ')' { // Upcoming translation e.g. "mantra (मन्त्र)"
+			break
 		} else {
+			// Obscure
 			result += string(obscurer)
 		}
 	}

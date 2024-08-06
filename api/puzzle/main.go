@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"regexp"
 
 	"github.com/NDoolan360/etyml-app/web/templates"
+	"github.com/a-h/templ"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
@@ -20,13 +22,16 @@ func main() {
 }
 
 func handler(ctx context.Context, request events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, error) {
-	puzzleId, ok := request.QueryStringParameters["id"]
-	if !ok {
+	re := regexp.MustCompile(`\/puzzle\/(?P<Id>.+)`)
+	matches := re.FindStringSubmatch(request.Path)
+	idIndex := re.SubexpIndex("Id")
+	if idIndex > len(matches) {
 		return &events.APIGatewayProxyResponse{
 			StatusCode: 404,
 			Body:       "Error 422: No Puzzle id provided",
 		}, nil
 	}
+	puzzleId := matches[idIndex]
 
 	guesses, ok := request.MultiValueQueryStringParameters["guess"]
 	if !ok {
@@ -37,21 +42,32 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (*event
 	if !ok {
 		return &events.APIGatewayProxyResponse{
 			StatusCode: 404,
-			Body:       fmt.Sprintf("Error 404: Puzzle %s not found", puzzleId),
+			Body:       fmt.Sprintf("Error 404: Invalid puzzle: %s not found", puzzleId),
 		}, nil
 	}
 
 	obscuredPuzzle := puzzle.obscure(guesses)
 
-	buf := bytes.NewBuffer([]byte{})
-	renderErr := templates.BaseLayout(
-		templates.Puzzle(
-			puzzleId,
+	var template templ.Component
+	if request.Headers["hx-request"] == "true" {
+		template = templates.UpdatePuzzle(
 			guesses,
 			obscuredPuzzle.html(),
 			obscuredPuzzle.isComplete(),
-		),
-	).Render(context.Background(), buf)
+		)
+	} else {
+		template = templates.BaseLayout(
+			templates.Puzzle(
+				puzzleId,
+				guesses,
+				obscuredPuzzle.html(),
+				obscuredPuzzle.isComplete(),
+			),
+		)
+	}
+
+	buf := bytes.NewBuffer([]byte{})
+	renderErr := template.Render(context.Background(), buf)
 	if renderErr != nil {
 		return nil, renderErr
 	}

@@ -6,9 +6,8 @@
   border-color: green !important;
 }
 
-form {
+#controls {
   padding: 20px;
-  width: 50%;
   margin: auto;
   display: flex;
   flex-direction: column;

@@ -1,31 +1,64 @@
 package templates
 
+import "strconv"
+
 templ Puzzle(id string, guesses []string, tree templ.Component, isComplete bool) {
-	if isComplete {
-		<a href="/">Done</a>
-	}
-	@tree
-	<form
-		action="/puzzle"
-		method="GET"
-		hx-boost="true"
-		hx-replace-url="true"
-	>
-		<input required autofocus disabled?={ isComplete } name="guess"/>
-		<!-- Hidden Fields -->
-		<input type="hidden" name="id" value={ id }/>
-		for _, guess := range(guesses) {
-			<input type="hidden" name="guess" value={ guess }/>
-		}
-	</form>
-	if len(guesses) > 0 {
-		<div id="previous">
-			<h2>Guesses</h2>
-			<ul>
+	<div id="tree">
+		@tree
+	</div>
+	<div id="controls">
+		if !isComplete {
+			<form
+				id="input"
+				action={ templ.URL(id) }
+				hx-target="#tree"
+				hx-boost="true"
+				hx-replace-url="true"
+			>
+				<input id="textbox" required autofocus name="guess"/>
 				for _, guess := range(guesses) {
-					<li>{ guess }</li>
+					<input type="hidden" name="guess" value={ guess }/>
 				}
-			</ul>
+			</form>
+		} else {
+			@done(guesses)
+		}
+	</div>
+	<div id="previous">
+		<h2>Guesses</h2>
+		<ul id="guesses">
+			for _, guess := range(guesses) {
+				<li>{ guess }</li>
+			}
+		</ul>
+	</div>
+}
+
+templ UpdatePuzzle(guesses []string, tree templ.Component, isComplete bool) {
+	// replace entire tree
+	@tree
+	// Out of Band updates
+	if len(guesses) > 0 {
+		// clear textbox
+		<input id="textbox" required autofocus name="guess" hx-swap-oob="true"/>
+		// add to previous guess inputs
+		<form id="input" hx-swap-oob="afterend:#textbox">
+			<input type="hidden" name="guess" value={ guesses[0] }/>
+		</form>
+		// add to previous guesses displayed
+		<ul id="guesses" hx-swap-oob="afterbegin">
+			<li name="guess" value={ guesses[0] }>{ guesses[0] }</li>
+		</ul>
+	}
+	if isComplete {
+		// remove form and show done link
+		<div id="controls" hx-swap-oob="innerHTML">
+			@done(guesses)
 		</div>
 	}
+}
+
+templ done(guesses []string) {
+	<a href="/">Done 🎉</a>
+	<p>Completed in { strconv.Itoa(len(guesses)) } guesses </p>
 }

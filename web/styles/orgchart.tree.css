@@ -1,12 +1,12 @@
 /* https://thecodeplayer.com/walkthrough/css3-family-tree */
-.tree ul {
+#tree ul {
   padding-top: 20px;
   position: relative;
   justify-content: center;
   display: flex;
 }
 
-.tree li {
+#tree li {
   float: left;
   text-align: center;
   list-style-type: none;
@@ -15,8 +15,8 @@
 }
 
 /* connectors */
-.tree li::before,
-.tree li::after {
+#tree li::before,
+#tree li::after {
   content: '';
   position: absolute;
   top: 0;
@@ -26,7 +26,7 @@
   height: 20px;
 }
 
-.tree li::after {
+#tree li::after {
   right: auto;
   left: 50%;
   border-left: 1px solid #ccc;
@@ -34,39 +34,39 @@
 
 /*We need to remove left-right connectors from elements without
 any siblings*/
-.tree li:only-child::after,
-.tree li:only-child::before {
+#tree li:only-child::after,
+#tree li:only-child::before {
   display: none;
 }
 
 /*Remove space from the top of single children*/
-.tree li:only-child {
+#tree li:only-child {
   padding-top: 0;
 }
 
 /*Remove left connector from first child and
 right connector from last child*/
-.tree li:first-child::before,
-.tree li:last-child::after {
+#tree li:first-child::before,
+#tree li:last-child::after {
   border: 0 none;
 }
 
 /*Adding back the vertical connector to the last nodes*/
-.tree li:last-child::before {
+#tree li:last-child::before {
   border-right: 1px solid #ccc;
   border-radius: 0 5px 0 0;
   -webkit-border-radius: 0 5px 0 0;
   -moz-border-radius: 0 5px 0 0;
 }
 
-.tree li:first-child::after {
+#tree li:first-child::after {
   border-radius: 5px 0 0 0;
   -webkit-border-radius: 5px 0 0 0;
   -moz-border-radius: 5px 0 0 0;
 }
 
 /*Time to add downward connectors from parents*/
-.tree ul ul::before {
+#tree ul ul::before {
   content: '';
   position: absolute;
   top: 0;
@@ -76,7 +76,7 @@ right connector from last child*/
   height: 20px;
 }
 
-.tree li span {
+#tree li span {
   border: 1px solid #ccc;
   padding: 5px 10px;
   text-decoration: none;
@@ -90,6 +90,6 @@ right connector from last child*/
   -moz-border-radius: 5px;
 }
 
-.tree li span h2 {
+#tree li span h2 {
   letter-spacing: 2px;
 }
