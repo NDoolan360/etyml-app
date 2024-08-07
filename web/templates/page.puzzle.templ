@@ -2,7 +2,7 @@ package templates
 
 import "strconv"
 
-templ Puzzle(id string, guesses []string, tree templ.Component, isComplete bool) {
+templ Puzzle(guesses []string, tree templ.Component, isComplete bool) {
 	<div id="tree">
 		@tree
 	</div>
@@ -10,12 +10,13 @@ templ Puzzle(id string, guesses []string, tree templ.Component, isComplete bool)
 		if !isComplete {
 			<form
 				id="input"
-				action={ templ.URL(id) }
-				hx-target="#tree"
 				hx-boost="true"
+				hx-swap="none"
 				hx-replace-url="true"
 			>
 				<input id="textbox" required autofocus name="guess"/>
+				// alternative method to these hidden inputs would be getting the
+				// page url query params to be included in the request url
 				for _, guess := range(guesses) {
 					<input type="hidden" name="guess" value={ guess }/>
 				}
@@ -36,7 +37,9 @@ templ Puzzle(id string, guesses []string, tree templ.Component, isComplete bool)
 
 templ UpdatePuzzle(guesses []string, tree templ.Component, isComplete bool) {
 	// replace entire tree
-	@tree
+	<div id="tree" hx-swap-oob="innerHTML">
+		@tree
+	</div>
 	// Out of Band updates
 	if len(guesses) > 0 {
 		// clear textbox
