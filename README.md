@@ -1,6 +1,13 @@
 # Etyml
 
-## Web Application Architecture
+## Dependencies
+
+- [Go](https://go.dev/)
+- [Netlify CLI](https://www.netlify.com/platform/core/cli/)
+- [htmx](https://htmx.org/) ([local copy](./web/scripts/htmx@2.0.1-min.js))
+  - custom version with fix for [htmx issue #1788](https://github.com/bigskysoftware/htmx/issues/1788)
+
+## Web App Diagram
 
 ```mermaid
 %%{ init : { "flowchart" : { "curve" : "stepBefore" }}}%%

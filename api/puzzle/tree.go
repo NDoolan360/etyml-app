@@ -13,19 +13,19 @@ func (tree Tree) html() templ.Component {
 	return templates.Tree(tree.Etymologies.html())
 }
 
-func (tree Tree) obscure(guesses []string) Tree {
+func (tree Tree) obscure(guesses []string, obscurer rune) Tree {
 	return Tree{
 		Node{
 			tree.Etymologies.Lang,
 			tree.Etymologies.Term,
 			tree.Etymologies.Definition,
-			tree.Etymologies.obscure(guesses).Children,
+			tree.Etymologies.obscure(guesses, obscurer).Children,
 		},
 	}
 }
 
-func (tree Tree) isComplete() bool {
-	return tree.Etymologies.isComplete('_')
+func (tree Tree) isComplete(obscurer rune) bool {
+	return tree.Etymologies.isComplete(obscurer)
 }
 
 var etymologyTrees = map[string]Tree{

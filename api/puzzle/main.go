@@ -27,8 +27,8 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (*event
 	idIndex := re.SubexpIndex("Id")
 	if idIndex > len(matches) {
 		return &events.APIGatewayProxyResponse{
-			StatusCode: 404,
-			Body:       "Error 422: No Puzzle id provided",
+			StatusCode: 400,
+			Body:       "Error 400: No Puzzle id provided",
 		}, nil
 	}
 	puzzleId := matches[idIndex]
@@ -46,22 +46,22 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (*event
 		}, nil
 	}
 
-	obscuredPuzzle := puzzle.obscure(guesses)
+	obscurer := '_'
+	obscuredPuzzle := puzzle.obscure(guesses, obscurer)
 
 	var template templ.Component
 	if request.Headers["hx-request"] == "true" {
 		template = templates.UpdatePuzzle(
 			guesses,
 			obscuredPuzzle.html(),
-			obscuredPuzzle.isComplete(),
+			obscuredPuzzle.isComplete(obscurer),
 		)
 	} else {
 		template = templates.BaseLayout(
 			templates.Puzzle(
-				puzzleId,
 				guesses,
 				obscuredPuzzle.html(),
-				obscuredPuzzle.isComplete(),
+				obscuredPuzzle.isComplete(obscurer),
 			),
 		)
 	}

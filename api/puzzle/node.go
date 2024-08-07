@@ -32,14 +32,12 @@ func (node Node) html() templ.Component {
 	)
 }
 
-func (node Node) obscure(guesses []string) Node {
-	obscuredTerm := obscureTerm(node.Term, guesses)
-
+func (node Node) obscure(guesses []string, obscurer rune) Node {
 	var newChildren []Node
 	shouldObscure := true
 	for _, child := range node.Children {
-		newChild := child.obscure(guesses)
-		if isCompletelyUnobscured(newChild.Term, '_') {
+		newChild := child.obscure(guesses, obscurer)
+		if isCompletelyUnobscured(newChild.Term, obscurer) {
 			// on full reveal of child, reveal parents
 			shouldObscure = false
 		}
@@ -47,19 +45,14 @@ func (node Node) obscure(guesses []string) Node {
 	}
 
 	if shouldObscure {
-		return Node{
-			node.Lang,
-			obscuredTerm,
-			"",
-			newChildren,
-		}
-	} else {
-		return Node{
-			node.Lang,
-			node.Term,
-			"",
-			newChildren,
-		}
+		node.Term = obscureTerm(node.Term, guesses)
+	}
+
+	return Node{
+		node.Lang,
+		node.Term,
+		"", // remove description
+		newChildren,
 	}
 }
 
@@ -67,19 +60,20 @@ func obscureTerm(term string, guesses []string) string {
 	hideIndex := largestGuess(term, guesses)
 	obscuredWithGuesses := obscureStringAfterNth(term, hideIndex, '_')
 	if isCompletelyObscured(obscuredWithGuesses, '_') {
-		return sneakPeek(term, '_')
+		// sneak peek
+		return obscureStringAfterNth(term, 1, '_')
 	} else {
 		return obscuredWithGuesses
 	}
 }
 
 func (node Node) isComplete(obscurer rune) bool {
-	chilrenObscured := false
+	childrenObscured := false
 	for _, child := range node.Children {
 		if !child.isComplete(obscurer) {
-			chilrenObscured = true
+			childrenObscured = true
 			break
 		}
 	}
-	return isCompletelyUnobscured(node.Term, obscurer) && !chilrenObscured
+	return isCompletelyUnobscured(node.Term, obscurer) && !childrenObscured
 }
