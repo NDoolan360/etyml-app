@@ -2,66 +2,79 @@ package templates
 
 import "strconv"
 
-templ Puzzle(guesses []string, tree templ.Component, isComplete bool) {
+templ Puzzle(tree templ.Component, isComplete bool) {
 	<div id="tree">
 		@tree
 	</div>
 	<div id="controls">
 		if !isComplete {
-			<form
-				id="input"
-				hx-boost="true"
-				hx-swap="none"
-				hx-replace-url="true"
-			>
-				<input id="textbox" required autofocus name="guess"/>
-				// alternative method to these hidden inputs would be getting the
-				// page url query params to be included in the request url
-				for _, guess := range(guesses) {
-					<input type="hidden" name="guess" value={ guess }/>
+			<form id="input" hx-boost="true" hx-swap="none" hx-replace-url="true">
+				@textbox(nil)
+				for _, guess := range(guesses(ctx) ) {
+					@hiddenInput("guess", guess)
+				}
+				for _, guess := range(hints(ctx)) {
+					@hiddenInput("hint", guess)
 				}
 			</form>
 		} else {
-			@done(guesses)
+			@done()
 		}
 	</div>
 	<div id="previous">
 		<h2>Guesses</h2>
 		<ul id="guesses">
-			for _, guess := range(guesses) {
+			for _, guess := range(guesses(ctx)) {
 				<li>{ guess }</li>
 			}
 		</ul>
 	</div>
 }
 
-templ UpdatePuzzle(guesses []string, tree templ.Component, isComplete bool) {
+templ UpdatePuzzle(tree templ.Component, isComplete bool, hintUpdate bool) {
 	// replace entire tree
 	<div id="tree" hx-swap-oob="innerHTML">
 		@tree
 	</div>
-	// Out of Band updates
-	if len(guesses) > 0 {
-		// clear textbox
-		<input id="textbox" required autofocus name="guess" hx-swap-oob="true"/>
-		// add to previous guess inputs
-		<form id="input" hx-swap-oob="afterend:#textbox">
-			<input type="hidden" name="guess" value={ guesses[0] }/>
-		</form>
-		// add to previous guesses displayed
-		<ul id="guesses" hx-swap-oob="afterbegin">
-			<li name="guess" value={ guesses[0] }>{ guesses[0] }</li>
-		</ul>
-	}
-	if isComplete {
-		// remove form and show done link
-		<div id="controls" hx-swap-oob="innerHTML">
-			@done(guesses)
-		</div>
+	if hintUpdate {
+		if len(hints(ctx)) > 0 {
+			// add to previous hint inputs
+			<form id="input" hx-swap-oob="afterend:#textbox">
+				@hiddenInput("hint", hints(ctx)[0])
+			</form>
+		}
+	} else {
+		// out of band updates
+		if len(guesses(ctx)) > 0 {
+			// clear textbox
+			@textbox(templ.Attributes{"hx-swap-oob": "true"})
+			// add to previous guess inputs
+			<form id="input" hx-swap-oob="afterend:#textbox">
+				@hiddenInput("guess", guesses(ctx)[0])
+			</form>
+			// add to previous guesses displayed
+			<ul id="guesses" hx-swap-oob="afterbegin">
+				<li name="guess" value={ guesses(ctx)[0] }>{ guesses(ctx)[0] }</li>
+			</ul>
+		}
+		if isComplete {
+			// remove form and show done link
+			<div id="controls" hx-swap-oob="innerHTML">
+				@done()
+			</div>
+		}
 	}
 }
 
-templ done(guesses []string) {
+templ textbox(attributes templ.Attributes) {
+	<input id="textbox" required autofocus name="guess" { attributes... }/>
+}
+
+templ hiddenInput(key string, value string) {
+	<input type="hidden" name={ key } value={ value }/>
+}
+
+templ done() {
 	<a href="/">Done 🎉</a>
-	<p>Completed in { strconv.Itoa(len(guesses)) } guesses </p>
+	<p>Completed in { strconv.Itoa(len(guesses(ctx))) } guesses with { strconv.Itoa(len(hints(ctx))) } hints </p>
 }

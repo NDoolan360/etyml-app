@@ -37,6 +37,14 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (*event
 	if !ok {
 		guesses = []string{}
 	}
+	ctx = context.WithValue(ctx, "guesses", guesses)
+
+	hints, ok := request.MultiValueQueryStringParameters["hint"]
+	if !ok {
+		hints = []string{}
+	}
+
+	ctx = context.WithValue(ctx, "hints", hints)
 
 	puzzle, ok := etymologyTrees[puzzleId]
 	if !ok {
@@ -47,27 +55,27 @@ func handler(ctx context.Context, request events.APIGatewayProxyRequest) (*event
 	}
 
 	obscurer := '_'
-	obscuredPuzzle := puzzle.obscure(guesses, obscurer)
+	obscuredPuzzle := puzzle.obscure(guesses, hints, obscurer)
 
 	var template templ.Component
 	if request.Headers["hx-request"] == "true" {
+		fmt.Println(request)
 		template = templates.UpdatePuzzle(
-			guesses,
-			obscuredPuzzle.html(),
+			obscuredPuzzle.html(hints),
 			obscuredPuzzle.isComplete(obscurer),
+			request.Headers["etyml-hint"] == "true",
 		)
 	} else {
 		template = templates.BaseLayout(
 			templates.Puzzle(
-				guesses,
-				obscuredPuzzle.html(),
+				obscuredPuzzle.html(hints),
 				obscuredPuzzle.isComplete(obscurer),
 			),
 		)
 	}
 
 	buf := bytes.NewBuffer([]byte{})
-	renderErr := template.Render(context.Background(), buf)
+	renderErr := template.Render(ctx, buf)
 	if renderErr != nil {
 		return nil, renderErr
 	}

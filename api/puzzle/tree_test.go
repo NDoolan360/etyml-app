@@ -8,23 +8,20 @@ import (
 )
 
 var testTree = Tree{
-	Node{
-		"Lang",
-		"Term",
-		"Definition",
+	Node{"jnvoiuhef", "Lang", "Term", "Definition",
 		[]Node{
-			{"Lang", "*child", "", []Node{}},
-			{"Lang", "children", "", []Node{}},
+			{"noiusdnml", "Lang", "*child", "", []Node{}},
+			{"lkjdafohc", "Lang", "children", "", []Node{}},
 		},
 	},
 }
 
 func TestTreeHtml(t *testing.T) {
 	// Space after span closing tag is annoying
-	expected := "<ul><li><span complete><h1>Lang</h1><h2>Term</h2><p>Definition</p></span> <ul><li><span complete><h1>Lang</h1><h2>*child</h2></span> </li><li><span complete><h1>Lang</h1><h2>children</h2></span> </li></ul></li></ul>"
+	expected := `<ul><li id="jnvoiuhef"><span complete><h1>Lang</h1><h2>Term</h2><p>Definition</p></span> <ul><li id="noiusdnml"><span complete><h1>Lang</h1><h2>*child</h2></span> </li><li id="lkjdafohc"><span complete><h1>Lang</h1><h2>children</h2></span> </li></ul></li></ul>`
 
 	buf := bytes.NewBuffer([]byte{})
-	testTree.html().Render(context.Background(), buf)
+	testTree.html([]string{}).Render(context.Background(), buf)
 	out := buf.String()
 
 	if out != expected {
@@ -40,26 +37,26 @@ func TestTreeObscure(t *testing.T) {
 		expected Tree
 	}{
 		{[]string{}, Tree{
-			Node{"Lang", "Term", "Definition",
+			Node{"jnvoiuhef", "Lang", "Term", "Definition",
 				[]Node{
-					{"Lang", "c____", "", []Node{}},
-					{"Lang", "c_______", "", []Node{}},
+					{"noiusdnml", "Lang", "c____", "", []Node{}},
+					{"lkjdafohc", "Lang", "c_______", "", []Node{}},
 				},
 			},
 		}},
 		{[]string{"term", "child", "children"}, testTree},
 		{[]string{"term", "child"}, Tree{
-			Node{"Lang", "Term", "Definition",
+			Node{"jnvoiuhef", "Lang", "Term", "Definition",
 				[]Node{
-					{"Lang", "child", "", []Node{}},
-					{"Lang", "child___", "", []Node{}},
+					{"noiusdnml", "Lang", "child", "", []Node{}},
+					{"lkjdafohc", "Lang", "child___", "", []Node{}},
 				},
 			},
 		}},
 	}
 
 	for _, test := range tests {
-		out := testTree.obscure(test.in, obscurer)
+		out := testTree.obscure(test.in, []string{}, obscurer)
 		if reflect.DeepEqual(out, test.expected) {
 			t.Errorf("input: '%v', expected output '%v' but got '%v'", test.in, test.expected, out)
 		}
@@ -73,9 +70,9 @@ func TestTreeComplete(t *testing.T) {
 		expected bool
 	}{
 		{testTree, true},
-		{testTree.obscure([]string{}, obscurer), false},
-		{testTree.obscure([]string{"term", "child", "children"}, obscurer), true},
-		{testTree.obscure([]string{"term", "child"}, obscurer), false},
+		{testTree.obscure([]string{}, []string{}, obscurer), false},
+		{testTree.obscure([]string{"term", "child", "children"}, []string{}, obscurer), true},
+		{testTree.obscure([]string{"term", "child"}, []string{}, obscurer), false},
 	}
 
 	for _, test := range tests {

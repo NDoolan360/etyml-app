@@ -9,17 +9,18 @@ type Tree struct {
 	Etymologies Node `json:"etymology"`
 }
 
-func (tree Tree) html() templ.Component {
-	return templates.Tree(tree.Etymologies.html())
+func (tree Tree) html(hints []string) templ.Component {
+	return templates.Tree(tree.Etymologies.html(hints))
 }
 
-func (tree Tree) obscure(guesses []string, obscurer rune) Tree {
+func (tree Tree) obscure(guesses []string, hints []string, obscurer rune) Tree {
 	return Tree{
 		Node{
+			tree.Etymologies.Id,
 			tree.Etymologies.Lang,
 			tree.Etymologies.Term,
 			tree.Etymologies.Definition,
-			tree.Etymologies.obscure(guesses, obscurer).Children,
+			tree.Etymologies.obscure(guesses, hints, obscurer).Children,
 		},
 	}
 }
@@ -31,19 +32,19 @@ func (tree Tree) isComplete(obscurer rune) bool {
 var etymologyTrees = map[string]Tree{
 	"M91vw3KIWzmaNuSNk5453Q": {
 		Node{
-			"Proto-Indo-European", "*men-", "think", []Node{
-				{"Late Latin", "mentālis", "", []Node{
-					{"Middle French", "mental", "", []Node{
-						{"English", "mental", "", []Node{}},
+			"aefnilwnf", "Proto-Indo-European", "*men-", "think", []Node{
+				{"awdboengz", "Late Latin", "mentālis", "", []Node{
+					{"wnhsuifbg", "Middle French", "mental", "", []Node{
+						{"snwifnjkn", "English", "mental", "Of or relating to intellectual as contrasted with emotional activity.", []Node{}},
 					}},
 				}},
-				{"Proto-Indo-Iranian", "*mántram", "", []Node{
-					{"Proto-Indo-Aryan", "*mántram", "", []Node{
-						{"Sanskrit", "mantra (मन्त्र)", "", []Node{
-							{"English", "mantra", "", []Node{}},
-							{"Malay", "menteri", "", []Node{
-								{"Portuguese", "mandarim", "", []Node{
-									{"English", "mandarin", "", []Node{}},
+				{"dbfjsnkfh", "Proto-Indo-Iranian", "*mántram", "", []Node{
+					{"dnkauwnwm", "Proto-Indo-Aryan", "*mántram", "", []Node{
+						{"wnjfusnal", "Sanskrit", "mantra (मन्त्र)", "", []Node{
+							{"mnbhyujsw", "English", "mantra", "The hymn portions of the Vedas; any passage of these used as a prayer.", []Node{}},
+							{"plsmkhdbi", "Malay", "menteri", "", []Node{
+								{"snikwmali", "Portuguese", "mandarim", "", []Node{
+									{"mfndhuwje", "English", "mandarin", "A pedantic or elitist bureaucrat.", []Node{}},
 								}},
 							}},
 						}},
@@ -54,30 +55,30 @@ var etymologyTrees = map[string]Tree{
 	},
 	"pJgLI2smVVyrmh2dZdM0cg": {
 		Node{
-			"Proto-Indo-European", "*bʰer-", "to carry, bear", []Node{
-				{"Proto-Germanic", "*barô", "", []Node{
-					{"Frankish", "*barō", "", []Node{
-						{"Medieval Latin", "barō", "", []Node{
-							{"Old French", "baron", "", []Node{
-								{"Middle English", "baroun", "", []Node{
-									{"English", "baron", "", []Node{}},
+			"wqmksubdn", "Proto-Indo-European", "*bʰer-", "to carry, bear", []Node{
+				{"fodnsbuej", "Proto-Germanic", "*barô", "", []Node{
+					{"snibekcjw", "Frankish", "*barō", "", []Node{
+						{"plwmwnehf", "Medieval Latin", "barō", "", []Node{
+							{"sjiwsncju", "Old French", "baron", "", []Node{
+								{"snhwihdin", "Middle English", "baroun", "", []Node{
+									{"smkallwwe", "English", "baron", "A male member of the lowest rank of English nobility.", []Node{}},
 								}},
 							}},
 						}},
 					}},
 				}},
-				{"Latin", "fūr", "", []Node{
-					{"Vulgar Latin", "*furittum", "", []Node{
-						{"Old French", "furet", "", []Node{
-							{"Middle English", "furet", "", []Node{
-								{"English", "ferret", "", []Node{}},
+				{"plwnjjisb", "Latin", "fūr", "", []Node{
+					{"sohdbjwku", "Vulgar Latin", "*furittum", "", []Node{
+						{"wkkduisbb", "Old French", "furet", "", []Node{
+							{"aosjfbeek", "Middle English", "furet", "", []Node{
+								{"sjiebfjss", "English", "ferret", "An often domesticated mammal rather like a weasel, descended from the polecat and often trained to hunt burrowing animals.", []Node{}},
 							}},
 						}},
 					}},
-					{"Latin", "sufferō", "", []Node{
-						{"Anglo-Norman", "suffrir", "", []Node{
-							{"Middle English", "suffren", "", []Node{
-								{"English", "suffer", "", []Node{}},
+					{"flrirnjii", "Latin", "sufferō", "", []Node{
+						{"dloeebbgk", "Anglo-Norman", "suffrir", "", []Node{
+							{"wkoplenwk", "Middle English", "suffren", "", []Node{
+								{"njoplednh", "English", "suffer", "To undergo hardship.", []Node{}},
 							}},
 						}},
 					}},
@@ -87,28 +88,28 @@ var etymologyTrees = map[string]Tree{
 	},
 	"EMuXo_ueWy2M3HuxvCp70A": {
 		Node{
-			"Proto-Indo-European", "*h₂er-", "to fit, to fix, to put together, to slot", []Node{
-				{"Latin", "arma", "", []Node{
-					{"Middle French", "alarme", "", []Node{
-						{"Middle English", "alarom", "", []Node{
-							{"Middle English", "alarme", "", []Node{
-								{"English", "alarm", "", []Node{}},
+			"snkolwkdn", "Proto-Indo-European", "*h₂er-", "to fit, to fix, to put together, to slot", []Node{
+				{"nwodlibee", "Latin", "arma", "", []Node{
+					{"eebkjodnp", "Middle French", "alarme", "", []Node{
+						{"kdnjwolkm", "Middle English", "alarom", "", []Node{
+							{"wjddplenk", "Middle English", "alarme", "", []Node{
+								{"dlinsmkwl", "English", "alarm", "A summons to arms, as on the approach of an enemy.", []Node{}},
 							}},
 						}},
 					}},
 				}},
-				{"Latin", "reor", "", []Node{
-					{"Latin", "ratiō", "", []Node{
-						{"French", "ration", "", []Node{
-							{"English", "ration", "", []Node{}},
+				{"kwmkfobtj", "Latin", "reor", "", []Node{
+					{"hvukjsbjj", "Latin", "ratiō", "", []Node{
+						{"fbwjuebni", "French", "ration", "", []Node{
+							{"dknvhufir", "English", "ration", "To portion out (especially during a shortage of supply); to limit access to.", []Node{}},
 						}},
 					}},
 				}},
-				{"Latin", "ornāre", "", []Node{
-					{"Latin", "ornamentum", "", []Node{
-						{"Old French", "ornement", "", []Node{
-							{"Middle English", "ornament", "", []Node{
-								{"English", "ornament", "", []Node{}},
+				{"kfngbouen", "Latin", "ornāre", "", []Node{
+					{"dnigktnei", "Latin", "ornamentum", "", []Node{
+						{"ifkrnwpql", "Old French", "ornement", "", []Node{
+							{"dkwofnghr", "Middle English", "ornament", "", []Node{
+								{"dnjeogntk", "English", "ornament", "An element of decoration; that which embellishes or adorns.", []Node{}},
 							}},
 						}},
 					}},
