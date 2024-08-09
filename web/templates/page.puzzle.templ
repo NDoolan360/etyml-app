@@ -8,13 +8,13 @@ templ Puzzle(tree templ.Component, isComplete bool) {
 	</div>
 	<div id="controls">
 		if !isComplete {
-			<form id="input" hx-boost="true" hx-swap="none" hx-replace-url="true">
+			<form id="input" hx-headers='{"etyml-guess": "true"}'>
 				@textbox(nil)
 				for _, guess := range(guesses(ctx) ) {
 					@hiddenInput("guess", guess)
 				}
-				for _, guess := range(hints(ctx)) {
-					@hiddenInput("hint", guess)
+				for _, hint := range(hints(ctx)) {
+					@hiddenInput("hint", hint)
 				}
 			</form>
 		} else {
@@ -31,38 +31,34 @@ templ Puzzle(tree templ.Component, isComplete bool) {
 	</div>
 }
 
-templ UpdatePuzzle(tree templ.Component, isComplete bool, hintUpdate bool) {
-	// replace entire tree
+templ PuzzleUpdate(tree templ.Component, isComplete bool) {
 	<div id="tree" hx-swap-oob="innerHTML">
 		@tree
 	</div>
-	if hintUpdate {
-		if len(hints(ctx)) > 0 {
-			// add to previous hint inputs
-			<form id="input" hx-swap-oob="afterend:#textbox">
-				@hiddenInput("hint", hints(ctx)[0])
-			</form>
-		}
-	} else {
-		// out of band updates
-		if len(guesses(ctx)) > 0 {
-			// clear textbox
-			@textbox(templ.Attributes{"hx-swap-oob": "true"})
-			// add to previous guess inputs
-			<form id="input" hx-swap-oob="afterend:#textbox">
-				@hiddenInput("guess", guesses(ctx)[0])
-			</form>
-			// add to previous guesses displayed
-			<ul id="guesses" hx-swap-oob="afterbegin">
-				<li name="guess" value={ guesses(ctx)[0] }>{ guesses(ctx)[0] }</li>
-			</ul>
-		}
-		if isComplete {
-			// remove form and show done link
-			<div id="controls" hx-swap-oob="innerHTML">
-				@done()
-			</div>
-		}
+	if isComplete {
+		<div id="controls" hx-swap-oob="innerHTML">
+			@done()
+		</div>
+	}
+}
+
+templ GuessUpdate() {
+	if len(guesses(ctx)) > 0 {
+		@textbox(templ.Attributes{"hx-swap-oob": "true"})
+		<form id="input" hx-swap-oob="afterend:#textbox">
+			@hiddenInput("guess", guesses(ctx)[0])
+		</form>
+		<ul id="guesses" hx-swap-oob="afterbegin">
+			<li>{ guesses(ctx)[0] }</li>
+		</ul>
+	}
+}
+
+templ HintUpdate() {
+	if len(hints(ctx)) > 0 {
+		<form id="input" hx-swap-oob="afterend:#textbox">
+			@hiddenInput("hint", hints(ctx)[0])
+		</form>
 	}
 }
 
@@ -75,6 +71,6 @@ templ hiddenInput(key string, value string) {
 }
 
 templ done() {
-	<a href="/">Done 🎉</a>
+	<a href="/" hx-boost="false">Done 🎉</a>
 	<p>Completed in { strconv.Itoa(len(guesses(ctx))) } guesses with { strconv.Itoa(len(hints(ctx))) } hints </p>
 }

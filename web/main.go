@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"log"
 	"os"
@@ -12,25 +11,19 @@ import (
 )
 
 var handlers = map[string]templ.Component{
-	"index.html": templates.BaseLayout(
-		templates.Index(),
-	),
+	"index.html": templates.BaseLayout(templates.Index(), nil),
 }
 
 func main() {
 	for file, templComponent := range handlers {
-		buf := bytes.NewBufferString("")
-		renderErr := templComponent.Render(context.Background(), buf)
-		if renderErr != nil {
-			log.Fatal(renderErr)
-			return
+		f, fileErr := os.Create(file)
+		if fileErr != nil {
+			log.Fatalf("failed to create output file: %v", fileErr)
 		}
 
-		writeErr := os.WriteFile(file, buf.Bytes(), 0644)
-		if writeErr != nil {
-			log.Fatal(writeErr)
-		} else {
-			log.Printf("Generated %s", file)
+		renderErr := templComponent.Render(context.Background(), f)
+		if renderErr != nil {
+			log.Fatalf("failed to write output file: %v", renderErr)
 		}
 	}
 }

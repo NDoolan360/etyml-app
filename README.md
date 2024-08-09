@@ -22,12 +22,10 @@ flowchart LR
         Netlify[⛩️ Netlify API Gateway]
         subgraph Static
             direction LR
-            index[📄 index.html]
-            favicon[🖼️ favicon.ico]
-            styles.css[🎨 styles.css]
-            subgraph scripts[Scripts]
-                htmx[&lt;/&gt; htmx]
-            end
+            pages[📄 pages]
+            images[🖼️ images]
+            styles[🎨 styles]
+            scripts[&lt;/&gt; scripts]
         end
         subgraph Functions
             direction LR

@@ -9,11 +9,20 @@ templ Tree(node templ.Component) {
 templ Node(id string, language string, term string, definition string, children []templ.Component, goal bool, complete bool, hinted bool) {
 	<li id={ id }>
 		if goal && !(hinted || complete) {
-			<a goal complete?={ complete } href={ assembleHintLink(id, guesses(ctx), hints(ctx)) } hx-boost="true" hx-swap="none" hx-replace-url="true" hx-headers='{"etyml-hint": "true"}'>
+			<a
+				title="hint"
+				goal
+				complete?={ complete }
+				href={ assembleHintLink(id, guesses(ctx), hints(ctx)) }
+				hx-headers='{"etyml-hint": "true"}'
+			>
 				@nodeInner(language, term, definition)
 			</a>
 		} else {
-			<span goal?={ goal } complete?={ complete }>
+			<span
+				goal?={ goal }
+				complete?={ complete }
+			>
 				@nodeInner(language, term, definition)
 			</span>
 		}

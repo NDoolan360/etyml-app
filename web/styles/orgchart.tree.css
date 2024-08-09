@@ -90,6 +90,10 @@ right connector from last child*/
   -moz-border-radius: 5px;
 }
 
+#tree li a {
+  text-decoration: none;
+}
+
 #tree li span h2,
 #tree li a h2 {
   letter-spacing: 2px;

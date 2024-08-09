@@ -40,14 +40,14 @@ func TestSkipChar(t *testing.T) {
 }
 
 func TestLargestGuess(t *testing.T) {
-	testGuesses := []string{"nail", "Door", "htmx", "Mantra"}
+	testGuesses := []string{"nail", "Door", "javascript", "Mantra"}
 	tests := []struct {
 		in       string
 		expected int
 	}{
 		{"Nathan", 2}, {"nathan", 2},
 		{"Doolan", 3}, {"doolan", 3},
-		{"HTMX", 4}, {"*htmx", 4},
+		{"JAVASCRIPT", 10}, {"*javascript", 10},
 		{"mantra (मन्त्र)", 6}, {"mantle", 4},
 	}
 
