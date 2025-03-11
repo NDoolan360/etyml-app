@@ -28,6 +28,7 @@ func TestIsCompletelyUnobscured(t *testing.T) {
 	}{
 		{"", true}, {"a", true}, {"_", false},
 		{"a_", false}, {"_a", false}, {"aa", true}, {"__", false},
+		{"*_", true}, {"*a_", false},
 	}
 
 	for _, test := range tests {

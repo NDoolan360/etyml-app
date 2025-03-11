@@ -27,6 +27,15 @@ func handler(trees map[string]Tree) func(ctx context.Context, request events.API
 		matches := re.FindStringSubmatch(request.Path)
 		idIndex := re.SubexpIndex("Id")
 		if idIndex > len(matches) {
+			// used to produce a random set of base words and their root
+			//
+			// jsonBytes, _ := json.Marshal(selectTermsWithCommonRoot(englishPIETerms, 3))
+			// return &events.APIGatewayProxyResponse{
+			// 	StatusCode:      200,
+			// 	Headers:         map[string]string{"Content-Type": "application/json"},
+			// 	Body:            string(jsonBytes),
+			// 	IsBase64Encoded: false,
+			// }, nil
 			return &events.APIGatewayProxyResponse{
 				StatusCode: 400,
 				Body:       "Error 400: No Puzzle id provided",

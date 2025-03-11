@@ -1,5 +1,13 @@
 # Etyml
 
+<!-- TODO:
+- add more obvious hint tooltip like question mark in a circle or something
+- add option to disable hints
+- add hints to any non root node with definitions
+- add validation for input words
+  - no duplicate and must be one of the english words in wiktionary
+-->
+
 ## Dependencies
 
 - [Go](https://go.dev/)

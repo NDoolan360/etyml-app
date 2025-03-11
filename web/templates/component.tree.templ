@@ -6,11 +6,19 @@ templ Tree(node templ.Component) {
 	</ul>
 }
 
-templ Node(id string, language string, term string, definition string, children []templ.Component, goal bool, complete bool, hinted bool) {
+templ Node(
+	id string,
+	language string,
+	term string,
+	definition string,
+	children []templ.Component,
+	goal bool,
+	complete bool,
+	hinted bool,
+) {
 	<li id={ id }>
-		if goal && !(hinted || complete) {
+		if definition != "" && !(hinted || complete) {
 			<a
-				title="hint"
 				goal
 				complete?={ complete }
 				href={ assembleHintLink(id, guesses(ctx), hints(ctx)) }

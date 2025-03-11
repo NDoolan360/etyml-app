@@ -2,7 +2,7 @@ package main
 
 func isCompletelyObscured(s string, obscurer rune) bool {
 	for _, r := range s {
-		if r != obscurer {
+		if !skipChar(r) && r != obscurer {
 			return false
 		}
 	}
